@@ -1,0 +1,18 @@
+{
+  "name": "reactive-coffee-debugger",
+  "version": "0.1.0",
+  "main": [
+    "dist/reactive-coffee-debugger.js",
+    "dist/reactive-coffee-debugger.min.js"
+  ],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "components"
+  ],
+  "dependencies": {
+    "underscore": ">=1.4.4",
+    "jquery": "~1.x",
+    "reactive-coffee": "git://github.com/chungwu/reactive-coffee/#8eee97d7a5d9ad0e6d2622fd0908790f65fc1877"
+  }
+}
