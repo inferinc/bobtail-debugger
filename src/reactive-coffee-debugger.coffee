@@ -61,9 +61,10 @@ rxdFactory = (rx, _, $) ->
     else
       $cover.hide()
 
+    info.lastAccessed = new Date().getTime()
     delayed AUTO_CLEAR_MS, ->
-      if rx.snap(-> autoClearCell.get())
-        $cover.fadeOut "fast", -> $cover.remove()
+      if rx.snap(-> autoClearCell.get()) and info.lastAccessed <= new Date().getTime() - AUTO_CLEAR_MS
+        $cover.remove()
         delete flashedElements[$elt.data("rxdUid")]
       
   lookupFlashInfo = ($elt) ->
@@ -76,7 +77,6 @@ rxdFactory = (rx, _, $) ->
       $cover = makeCover($elt).appendTo($("body"))
       info = {$cover, $elt: $elt, count: 0, attrs: [], isArrayChild: false, isBody: false}
       flashedElements[uid] = info
-    info.lastAccessed = new Date().getTime()
     return info
 
   flashChildren = ($elt, isArrayChild) ->

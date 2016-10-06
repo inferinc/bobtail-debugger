@@ -78,13 +78,12 @@
       } else {
         $cover.hide();
       }
+      info.lastAccessed = new Date().getTime();
       return delayed(AUTO_CLEAR_MS, function() {
         if (rx.snap(function() {
           return autoClearCell.get();
-        })) {
-          $cover.fadeOut("fast", function() {
-            return $cover.remove();
-          });
+        }) && info.lastAccessed <= new Date().getTime() - AUTO_CLEAR_MS) {
+          $cover.remove();
           return delete flashedElements[$elt.data("rxdUid")];
         }
       });
@@ -109,7 +108,6 @@
         };
         flashedElements[uid] = info;
       }
-      info.lastAccessed = new Date().getTime();
       return info;
     };
     flashChildren = function($elt, isArrayChild) {
