@@ -16,10 +16,11 @@ rxdFactory = (rx, _, $) ->
 
   delayed = (ms, fn) -> setTimeout(fn, ms)
 
-  clearFlash = ->
-    for x, {$cover} of flashedElements
-      $cover.remove()
-    flashedElements = {}
+  clearFlash = (timestamp) ->
+    for uid, info of flashedElements
+      if not timestamp? or info.lastAccessed <= timestamp
+        info.$cover.remove()
+        delete flashedElements[uid]
 
   makeCover = ($elt) ->
     {left, top} = $elt.offset()
@@ -64,10 +65,6 @@ rxdFactory = (rx, _, $) ->
       $cover.hide()
 
     info.lastAccessed = new Date().getTime()
-    delayed AUTO_CLEAR_MS, ->
-      if rx.snap(-> autoClearCell.get()) and info.lastAccessed <= new Date().getTime() - AUTO_CLEAR_MS
-        $cover.remove()
-        delete flashedElements[$elt.data("rxdUid")]
       
   lookupFlashInfo = ($elt) ->
     uid = $elt.data("rxdUid")
@@ -180,8 +177,17 @@ rxdFactory = (rx, _, $) ->
       clearFlash()
       unsubscribeHandlers()    
 
+  autoClearId = null
   rx.autoSub autoClearCell.onSet, ([o, n]) ->
     clearFlash()
+    if n
+      autoClearId = setInterval(
+        (-> clearFlash(new Date().getTime() - AUTO_CLEAR_MS))
+        AUTO_CLEAR_MS/2
+      )
+    else
+      clearInterval(autoClearId)
+      autoClearId = null
       
   return rxd
 

@@ -2,7 +2,7 @@
   var rxdFactory;
 
   rxdFactory = function(rx, _, $) {
-    var AUTO_CLEAR_MS, R, attrsSubId, autoClearCell, childrenSubId, clearFlash, delayed, enabledCell, flashAttrs, flashChildren, flashedElements, lookupFlashInfo, makeCover, mkuid, nextUid, rxd, rxt, setAutoClear, setEnabled, subscribeHandlers, unsubscribeHandlers, updateCover;
+    var AUTO_CLEAR_MS, R, attrsSubId, autoClearCell, autoClearId, childrenSubId, clearFlash, delayed, enabledCell, flashAttrs, flashChildren, flashedElements, lookupFlashInfo, makeCover, mkuid, nextUid, rxd, rxt, setAutoClear, setEnabled, subscribeHandlers, unsubscribeHandlers, updateCover;
     rxd = {};
     rxt = rx.rxt;
     R = rxt.tags;
@@ -17,13 +17,19 @@
     delayed = function(ms, fn) {
       return setTimeout(fn, ms);
     };
-    clearFlash = function() {
-      var $cover, x;
-      for (x in flashedElements) {
-        $cover = flashedElements[x].$cover;
-        $cover.remove();
+    clearFlash = function(timestamp) {
+      var info, uid, _results;
+      _results = [];
+      for (uid in flashedElements) {
+        info = flashedElements[uid];
+        if ((timestamp == null) || info.lastAccessed <= timestamp) {
+          info.$cover.remove();
+          _results.push(delete flashedElements[uid]);
+        } else {
+          _results.push(void 0);
+        }
       }
-      return flashedElements = {};
+      return _results;
     };
     makeCover = function($elt) {
       var $cover, left, top, _ref;
@@ -82,15 +88,7 @@
       } else {
         $cover.hide();
       }
-      info.lastAccessed = new Date().getTime();
-      return delayed(AUTO_CLEAR_MS, function() {
-        if (rx.snap(function() {
-          return autoClearCell.get();
-        }) && info.lastAccessed <= new Date().getTime() - AUTO_CLEAR_MS) {
-          $cover.remove();
-          return delete flashedElements[$elt.data("rxdUid")];
-        }
-      });
+      return info.lastAccessed = new Date().getTime();
     };
     lookupFlashInfo = function($elt) {
       var $cover, info, uid;
@@ -250,10 +248,19 @@
         return unsubscribeHandlers();
       }
     });
+    autoClearId = null;
     rx.autoSub(autoClearCell.onSet, function(_arg) {
       var n, o;
       o = _arg[0], n = _arg[1];
-      return clearFlash();
+      clearFlash();
+      if (n) {
+        return autoClearId = setInterval((function() {
+          return clearFlash(new Date().getTime() - AUTO_CLEAR_MS);
+        }), AUTO_CLEAR_MS / 2);
+      } else {
+        clearInterval(autoClearId);
+        return autoClearId = null;
+      }
     });
     return rxd;
   };
