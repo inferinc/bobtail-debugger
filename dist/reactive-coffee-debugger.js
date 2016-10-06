@@ -48,7 +48,7 @@
       return $cover;
     };
     updateCover = function(info) {
-      var $cover, $elt, contents, left, top, _ref;
+      var $cover, $elt, attr, contents, count, counts, left, top, _ref;
       $elt = info.$elt, $cover = info.$cover;
       _ref = $elt.offset(), left = _ref.left, top = _ref.top;
       $cover.width($elt.outerWidth());
@@ -62,7 +62,11 @@
         contents.push("" + info.count + "x");
       }
       if (info.attrs.length > 0) {
-        contents.push(info.attrs.join(", "));
+        counts = _.countBy(info.attrs);
+        for (attr in counts) {
+          count = counts[attr];
+          contents.push(("" + attr) + (count > 1 ? "-" + count + "x" : ""));
+        }
       }
       $cover.text(contents.join("; "));
       if (info.isBody) {

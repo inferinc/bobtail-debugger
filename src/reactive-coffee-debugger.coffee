@@ -45,7 +45,9 @@ rxdFactory = (rx, _, $) ->
     if info.count > 0
       contents.push "#{info.count}x"
     if info.attrs.length > 0
-      contents.push info.attrs.join(", ")
+      counts = _.countBy(info.attrs)
+      for attr, count of counts
+        contents.push "#{attr}" + if count > 1 then "-#{count}x" else ""
     $cover.text(contents.join("; "))
 
     if info.isBody
