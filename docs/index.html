@@ -1,0 +1,209 @@
+<!DOCTYPE html><html><head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><title>Reactive TodoMVC</title><link rel="stylesheet" href="bower_components/todomvc-common/base.css"><style type="text/css">#cleared {
+  border-top: 4px dotted #ccc;
+  opacity: 0.5;
+}</style></head><body><script src="bower_components/todomvc-common/base.js"></script><script src="bower_components/jquery/dist/jquery.js"></script><script src="bower_components/underscore/underscore.js"></script><script src="bower_components/reactive-coffee/dist/reactive-coffee.js"></script><script src="reactive-coffee-debugger.js"></script><script>(function() {
+  var Task, bind, incomplete,
+    slice = [].slice;
+
+  rxd.installDebugger();
+
+  rxd.setEnabled(true);
+
+  bind = rx.bind;
+
+  rx.rxt.importTags();
+
+  Task = (function() {
+    function Task(title) {
+      this.title = rx.cell(title);
+      this.isEditing = rx.cell(false);
+      this.isCompleted = rx.cell(false);
+    }
+
+    return Task;
+
+  })();
+
+  window.tasks = rx.array();
+
+  window.clearedTasks = rx.array();
+
+  incomplete = function() {
+    var task;
+    return ((function() {
+      var i, len, ref, results;
+      ref = tasks.all();
+      results = [];
+      for (i = 0, len = ref.length; i < len; i++) {
+        task = ref[i];
+        if (!task.isCompleted.get()) {
+          results.push(task);
+        }
+      }
+      return results;
+    })()).length;
+  };
+
+  $(function() {
+    return $('body').prepend(section({
+      id: 'todoapp'
+    }, [
+      header({
+        id: 'header'
+      }, [
+        h1('todos'), input({
+          id: 'new-todo',
+          type: 'text',
+          placeholder: 'What needs to be done?',
+          autofocus: true,
+          keydown: function(e) {
+            if (e.which === 13) {
+              tasks.push(new Task(this.val().trim()));
+              this.val('');
+              return false;
+            }
+          }
+        })
+      ]), section({
+        id: 'main'
+      }, [
+        input({
+          id: 'toggle-all',
+          type: 'checkbox',
+          style: bind(function() {
+            if (tasks.length() > 0) {
+              return {
+                display: "block"
+              };
+            } else {
+              return {
+                display: "none"
+              };
+            }
+          }),
+          change: function() {
+            var i, len, ref, results, task;
+            ref = tasks.all();
+            results = [];
+            for (i = 0, len = ref.length; i < len; i++) {
+              task = ref[i];
+              results.push(task.isCompleted.set(this.is(':checked')));
+            }
+            return results;
+          }
+        }), label({
+          "for": 'toggle-all'
+        }, 'Mark all as complete'), ul({
+          id: 'todo-list'
+        }, tasks.map(function(task) {
+          var editBox;
+          editBox = null;
+          return li({
+            "class": bind(function() {
+              return [task.isCompleted.get() ? 'completed' : void 0, task.isEditing.get() ? 'editing' : void 0].filter(function(x) {
+                return x != null;
+              }).join(' ');
+            })
+          }, bind(function() {
+            if (task.isEditing.get()) {
+              return [
+                editBox = input({
+                  type: 'text',
+                  "class": 'edit',
+                  autofocus: true,
+                  value: task.title.get(),
+                  keyup: function(e) {
+                    if (e.which === 13) {
+                      return this.blur();
+                    }
+                  },
+                  blur: function() {
+                    task.title.set(this.val());
+                    return task.isEditing.set(false);
+                  }
+                })
+              ];
+            } else {
+              return [
+                input({
+                  "class": 'toggle',
+                  type: 'checkbox',
+                  checked: bind(function() {
+                    return task.isCompleted.get();
+                  }),
+                  change: function() {
+                    return task.isCompleted.set(this.is(':checked'));
+                  }
+                }), label({
+                  dblclick: function() {
+                    task.isEditing.set(true);
+                    return editBox.focus();
+                  }
+                }, bind(function() {
+                  return "" + (task.title.get());
+                })), button({
+                  "class": 'destroy',
+                  click: function() {
+                    return tasks.remove(task);
+                  }
+                })
+              ];
+            }
+          }));
+        }))
+      ]), section({
+        id: 'cleared'
+      }, [
+        ul({
+          id: "todo-list",
+          "class": "cleared"
+        }, clearedTasks.map(function(taskTitle) {
+          return li({
+            "class": "completed"
+          }, [label(taskTitle)]);
+        }))
+      ]), footer({
+        id: 'footer'
+      }, [
+        span({
+          id: 'todo-count'
+        }, bind(function() {
+          return [strong("" + (incomplete())), incomplete() === 1 ? ' item left' : ' items left'];
+        })), button({
+          id: 'clear-completed',
+          click: function() {
+            var completedTasks, task;
+            completedTasks = (function() {
+              var i, len, ref, results;
+              ref = tasks.all();
+              results = [];
+              for (i = 0, len = ref.length; i < len; i++) {
+                task = ref[i];
+                if (task.isCompleted.get()) {
+                  results.push(task.title.get());
+                }
+              }
+              return results;
+            })();
+            tasks.replace((function() {
+              var i, len, ref, results;
+              ref = tasks.all();
+              results = [];
+              for (i = 0, len = ref.length; i < len; i++) {
+                task = ref[i];
+                if (!task.isCompleted.get()) {
+                  results.push(task);
+                }
+              }
+              return results;
+            })());
+            return clearedTasks.splice.apply(clearedTasks, [clearedTasks.length(), 0].concat(slice.call(completedTasks)));
+          }
+        }, 'Clear completed')
+      ])
+    ]));
+  });
+
+}).call(this);
+</script></body></html>

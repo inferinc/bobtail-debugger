@@ -1,0 +1,26 @@
+{
+  "name": "reactive-coffee",
+  "main": [
+    "dist/reactive-coffee.js",
+    "dist/reactive-coffee.min.js"
+  ],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "components"
+  ],
+  "dependencies": {
+    "underscore": ">=1.4.4",
+    "jquery": "~1.x",
+    "es5-shim": "~2.3.0"
+  },
+  "homepage": "https://github.com/chungwu/reactive-coffee",
+  "_release": "8eee97d7a5",
+  "_resolution": {
+    "type": "commit",
+    "commit": "8eee97d7a5d9ad0e6d2622fd0908790f65fc1877"
+  },
+  "_source": "git://github.com/chungwu/reactive-coffee.git",
+  "_target": "8eee97d7a5d9ad0e6d2622fd0908790f65fc1877",
+  "_originalSource": "git://github.com/chungwu/reactive-coffee/"
+}
