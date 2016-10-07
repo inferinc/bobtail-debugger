@@ -188,7 +188,9 @@ rxdFactory = (rx, _, $) ->
     else
       clearInterval(autoClearId)
       autoClearId = null
-      
+
+  rx.clearHighlights = -> clearFlash()
+                  
   return rxd
 
 do(root = this, factory = rxdFactory) ->
