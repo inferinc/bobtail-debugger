@@ -262,6 +262,9 @@
         return autoClearId = null;
       }
     });
+    rx.clearHighlights = function() {
+      return clearFlash();
+    };
     return rxd;
   };
 
