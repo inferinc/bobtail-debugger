@@ -11,7 +11,7 @@
     "bower_components"
   ],
   "dependencies": {
-    "reactive-coffee": "git://github.com/chungwu/reactive-coffee/#8eee97d7a5d9ad0e6d2622fd0908790f65fc1877",
+    "reactive-coffee": ">=1.3.2",
     "todomvc-common": "~0.1.7"
   }
 }
