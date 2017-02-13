@@ -13,6 +13,6 @@
   "dependencies": {
     "underscore": ">=1.4.4",
     "jquery": ">=1.x",
-    "reactive-coffee": ">=1.3.2"
+    "bobtail": ">=1.3.3"
   }
 }
