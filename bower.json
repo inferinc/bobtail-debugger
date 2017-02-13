@@ -1,6 +1,6 @@
 {
   "name": "bobtail-debugger",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "main": "dist/reactive-coffee-debugger.js",
   "ignore": [
     "**/.*",
@@ -10,6 +10,6 @@
   "dependencies": {
     "underscore": ">=1.4.4",
     "jquery": ">=1.x",
-    "bobtail": ">=1.4.0"
+    "bobtail": ">=1.4.2"
   }
 }
