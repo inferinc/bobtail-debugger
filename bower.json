@@ -1,10 +1,7 @@
 {
-  "name": "reactive-coffee-debugger",
+  "name": "bobtail-debugger",
   "version": "0.2.0",
-  "main": [
-    "dist/reactive-coffee-debugger.js",
-    "dist/reactive-coffee-debugger.min.js"
-  ],
+  "main": "dist/reactive-coffee-debugger.js",
   "ignore": [
     "**/.*",
     "node_modules",

@@ -1,6 +1,6 @@
 {
-  "name": "reactive-coffee-debugger",
-  "version": "0.1.0",
+  "name": "bobtail-debugger",
+  "version": "0.2.0",
   "repository": {
     "type": "git",
     "url": "git://github.com/chungwu/reactive-coffee-debugger.git"
