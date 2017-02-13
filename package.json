@@ -38,6 +38,6 @@
   "dependencies": {
     "underscore": "~1.6.0",
     "jquery": "^2.1.1",
-    "reactive-coffee": ">=1.3.2"
+    "bobtail": ">=1.3.3"
   }
 }
